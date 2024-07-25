@@ -54,7 +54,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     const spinner = ora('Starting Next.js dev server...').start();
 
     // 启动Next.js dev server
-    const nextProcess = exec('next dev -p 8090', (error, stdout, stderr) => {
+    const nextProcess = exec('next dev -p 8099', (error, stdout, stderr) => {
       if (error) {
         spinner.fail(`Failed to start Next.js dev server: ${error.message}`);
         return;

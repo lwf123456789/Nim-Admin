@@ -1,204 +1,116 @@
 'use client'
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Column } from "react-table";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DataTableOne from "@/components/DataTables/DataTableOne";
 import { Employee } from "@/types/Employee";
 import { NickNameIcon, EmailIcon, BioIcon } from "@/components/Icons";
-import { metadata } from '@/js/metadata';
+import ModalOne from "@/components/Modals/ModalOne";
 
 
-const userListPage = () => {
+const UserListPage = () => {
+  //表格mk数据
   const tableData: Employee[] = [
     {
-      id: "155",
-      name: "王伟",
-      position: "高级设计师",
-      duration: "3年",
-      birthDate: "1977年11月25日",
-      email: "wangwei@example.com",
-      phone: "+86(10)-1234-5678",
-      address: "北京朝阳区",
-      status: "活跃",
+      id: "101",
+      nickName: "张三",
+      phoneNumber: "13800138000",
+      userName: "zhangsan",
+      bio: "张三是一位软件工程师，擅长前端开发。",
+      status: "活跃"
     },
     {
-      id: "156",
-      name: "李娜",
-      position: "前端开发工程师",
-      duration: "3年",
-      birthDate: "1966年11月25日",
-      email: "lina@example.com",
-      phone: "+86(21)-8765-4321",
-      address: "上海浦东新区",
-      status: "停用",
+      id: "102",
+      nickName: "李四",
+      phoneNumber: "13800138001",
+      userName: "lisi",
+      bio: "李四是一位网络工程师，负责网络维护。",
+      status: "停用"
     },
     {
-      id: "157",
-      name: "张强",
-      position: "产品经理",
-      duration: "3年",
-      birthDate: "1955年11月25日",
-      email: "zhangqiang@example.com",
-      phone: "+86(20)-2345-6789",
-      address: "广州天河区",
-      status: "活跃",
+      id: "103",
+      nickName: "王五",
+      phoneNumber: "13800138002",
+      userName: "wangwu",
+      bio: "王五是数据库管理员，负责数据库管理。",
+      status: "活跃"
     },
     {
-      id: "158",
-      name: "陈晓东",
-      position: "后端开发工程师",
-      duration: "3年",
-      birthDate: "1979年11月25日",
-      email: "chenxiaodong@example.com",
-      phone: "+86(29)-3456-7890",
-      address: "西安高新区",
-      status: "停用",
+      id: "104",
+      nickName: "赵六",
+      phoneNumber: "13800138003",
+      userName: "zhaoliu",
+      bio: "赵六是系统分析师，负责系统分析和设计。",
+      status: "警告"
     },
     {
-      id: "159",
-      name: "赵敏",
-      position: "测试工程师",
-      duration: "3年",
-      birthDate: "1969年11月25日",
-      email: "zhaomin@example.com",
-      phone: "+86(28)-4567-8901",
-      address: "成都武侯区",
-      status: "活跃",
+      id: "105",
+      nickName: "孙七",
+      phoneNumber: "13800138004",
+      userName: "sunqi",
+      bio: "孙七是测试工程师，负责软件测试。",
+      status: "活跃"
     },
     {
-      id: "160",
-      name: "刘洋",
-      position: "UI设计师",
-      duration: "3年",
-      birthDate: "1989年11月25日",
-      email: "liuyang@example.com",
-      phone: "+86(25)-5678-9012",
-      address: "南京建邺区",
-      status: "停用",
+      id: "106",
+      nickName: "周八",
+      phoneNumber: "13800138005",
+      userName: "zhouba",
+      bio: "周八是产品经理，负责产品规划。",
+      status: "停用"
     },
     {
-      id: "161",
-      name: "孙丽",
-      position: "项目经理",
-      duration: "3年",
-      birthDate: "1979年11月25日",
-      email: "sunli@example.com",
-      phone: "+86(24)-6789-0123",
-      address: "沈阳和平区",
-      status: "活跃",
+      id: "107",
+      nickName: "吴九",
+      phoneNumber: "13800138006",
+      userName: "wujin",
+      bio: "吴九是UI设计师，负责界面设计。",
+      status: "活跃"
     },
     {
-      id: "162",
-      name: "吴刚",
-      position: "运维工程师",
-      duration: "3年",
-      birthDate: "1979年11月25日",
-      email: "wugang@example.com",
-      phone: "+86(23)-7890-1234",
-      address: "重庆渝北区",
-      status: "停用",
+      id: "108",
+      nickName: "郑十",
+      phoneNumber: "13800138007",
+      userName: "zhengshi",
+      bio: "郑十是运维工程师，负责系统运维。",
+      status: "警告"
     },
     {
-      id: "163",
-      name: "何梅",
-      position: "市场专员",
-      duration: "3年",
-      birthDate: "1945年11月25日",
-      email: "hemei@example.com",
-      phone: "+86(22)-8901-2345",
-      address: "天津南开区",
-      status: "活跃",
+      id: "109",
+      nickName: "王一",
+      phoneNumber: "13800138008",
+      userName: "wangyi",
+      bio: "王一是项目经理，负责项目管理。",
+      status: "活跃"
     },
     {
-      id: "164",
-      name: "周强",
-      position: "数据分析师",
-      duration: "3年",
-      birthDate: "2000年11月25日",
-      email: "zhouqiang@example.com",
-      phone: "+86(27)-9012-3456",
-      address: "武汉洪山区",
-      status: "停用",
-    },
-    {
-      id: "165",
-      name: "杨洋",
-      position: "技术支持工程师",
-      duration: "3年",
-      birthDate: "1999年11月25日",
-      email: "yangyang@example.com",
-      phone: "+86(26)-0123-4567",
-      address: "青岛市南区",
-      status: "活跃",
-    },
-    {
-      id: "166",
-      name: "陈晓华",
-      position: "售前工程师",
-      duration: "3年",
-      birthDate: "1965年11月25日",
-      email: "chenxiaohua@example.com",
-      phone: "+86(21)-1234-5678",
-      address: "上海浦东新区",
-      status: "停用",
-    },
-    {
-      id: "167",
-      name: "徐凯",
-      position: "软件工程师",
-      duration: "3年",
-      birthDate: "1975年11月25日",
-      email: "xukai@example.com",
-      phone: "+86(10)-2345-6789",
-      address: "北京海淀区",
-      status: "活跃",
-    },
-    {
-      id: "168",
-      name: "张三",
-      position: "硬件工程师",
-      duration: "3年",
-      birthDate: "1945年11月25日",
-      email: "zhangsan@example.com",
-      phone: "+86(20)-3456-7890",
-      address: "广州越秀区",
-      status: "停用",
-    },
-    {
-      id: "169",
-      name: "李四",
-      position: "网络工程师",
-      duration: "3年",
-      birthDate: "1998年11月25日",
-      email: "lisi@example.com",
-      phone: "+86(28)-4567-8901",
-      address: "成都高新区",
-      status: "活跃",
-    },
+      id: "110",
+      nickName: "李二",
+      phoneNumber: "13800138009",
+      userName: "lier",
+      bio: "李二是技术支持，负责客户支持。",
+      status: "停用"
+    }
   ];
 
-
+  //列名配置
   const columns: Column<Employee>[] = [
     {
       Header: "名字",
-      accessor: "name",
+      accessor: "nickName",
     },
     {
-      Header: "职位",
-      accessor: "position",
+      Header: "手机号码",
+      accessor: "phoneNumber",
     },
     {
-      Header: "出生日期",
-      accessor: "birthDate",
+      Header: "用户名",
+      accessor: "userName",
     },
     {
-      Header: "邮箱",
-      accessor: "email",
-    },
-    {
-      Header: "所在地区",
-      accessor: "address",
+      Header: "个人介绍",
+      accessor: "bio",
     },
     {
       Header: "状态",
@@ -218,6 +130,7 @@ const userListPage = () => {
     }
   ];
 
+  //模态框的配置
   const modalFields = [
     {
       label: "昵称",
@@ -231,13 +144,6 @@ const userListPage = () => {
       name: "phoneNumber",
       type: "text",
       placeholder: "请输入手机号...",
-    },
-    {
-      label: "邮箱",
-      name: "emailAddress",
-      type: "email",
-      placeholder: "请输入邮箱...",
-      icon: <EmailIcon />,
     },
     {
       label: "用户名",
@@ -254,15 +160,88 @@ const userListPage = () => {
     },
   ];
 
+  //表单校验配置
+  const validateNotEmpty = (value: any) => (value ? null : "此项为必填项!");
+  const validationRules = {
+    nickName: validateNotEmpty,
+    phoneNumber: validateNotEmpty,
+    emailAddress: validateNotEmpty,
+    userName: validateNotEmpty,
+    bio: validateNotEmpty,
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [modalType, setModalType] = useState<string>("normal");
+  const [selectedRow, setSelectedRow] = useState<any>({});
+  const handleOpenModal = (type: string, mode: "create" | "edit" | "view") => {
+    setModalType(type);
+    setModalMode(mode);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreateUser = async (userData: any) => {
+    console.log('this is create',userData);
+  };
+
+  const handleUpdateUser = async (userData: any) => {
+    console.log('this is update',userData);
+  };
+
+  const handleDeleteUser = async (user: any) => {
+    if (window.confirm('确定要删除这条记录吗？')) {
+      console.log('this is del',user);
+    }
+  };
+
+  const handleDetail = async (user: any) => {
+    console.log('this is detail', user);
+  }
+
+  const handleSubmit = (data: any) => {
+    if (modalMode === "create") {
+      handleCreateUser(data);
+    } else if (modalMode === "edit") {
+      handleUpdateUser(data);
+    }
+  };
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="用户信息管理" />
 
-      <div className="flex flex-col gap-10">
-        <DataTableOne columns={columns} data={tableData} modalFields={modalFields} title="新增用户" subTitle="填写资产信息" />
+      <div>
+        <DataTableOne
+          handleDetail={handleDetail}//详情操作
+          selectedRow={selectedRow} // 传递 selectedRow 状态
+          setSelectedRow={setSelectedRow} // 传递 setSelectedRow 函数
+          columns={columns}//列配置
+          data={tableData}//表格数据
+          handleOpenModal={handleOpenModal} // 传递打开模态框的方法
+          handleDelete={handleDeleteUser}//删除操作
+        />
+
+        {isModalOpen && (
+          <ModalOne
+            onSubmit={handleSubmit} // 传递 onSubmit 回调函数
+            title={modalMode === "create" ? "新增" : modalMode === "edit" ? "修改" : "查看详情"}
+            subTitle="填写信息"
+            fields={modalFields}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            initialData={selectedRow} // 初始化数据，可以根据需要设置
+            mode={modalMode}
+            modalType={modalType}
+            validationRules={validationRules} // 传递校验规则
+          />
+        )}
       </div>
     </DefaultLayout>
   );
 };
 
-export default userListPage;
+export default UserListPage;

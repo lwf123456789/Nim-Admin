@@ -1,5 +1,5 @@
-'use client'
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import Link from 'next/link';
 import {
   useTable,
   useSortBy,
@@ -7,27 +7,30 @@ import {
   useFilters,
   usePagination,
   Column,
-  TableInstance,
+  FilterProps,
+  useRowSelect,
 } from "react-table";
-import { FilterProps } from "react-table";
 import ColumnFilter from "./ColumnFilter";
-import ModalOne from "../Modals/ModalOne";
 
 interface DataTableOneProps<T extends object> {
   columns: Column<T>[];
   data: T[];
-  modalFields: Array<{
-    label: string;
-    name: string;
-    type: string;
-    placeholder: string;
-    icon?: React.ReactNode;
-  }>;
-  title:string;
-  subTitle:string;
+  handleOpenModal: (type: string, mode: "create" | "edit") => void;
+  selectedRow: any; // 父组件传递的 selectedRow
+  setSelectedRow: (row: any) => void; // 父组件传递的 setSelectedRow 函数
+  handleDelete: (row: any) => void;
+  handleDetail: (row: any) => void;
 }
 
-const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTitle }: DataTableOneProps<T>) => {
+const DataTableOne = <T extends object>({
+  columns,
+  data,
+  handleOpenModal,
+  selectedRow,
+  setSelectedRow,
+  handleDelete,
+  handleDetail
+}: DataTableOneProps<T>) => {
   const defaultColumn = useMemo(() => {
     return {
       Filter: ColumnFilter as React.FC<FilterProps<T>>,
@@ -45,6 +48,48 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
     useGlobalFilter,
     useSortBy,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          disableSortBy: true,
+          Header: ({ getToggleAllRowsSelectedProps }) => {
+            const { indeterminate, ...restProps } = getToggleAllRowsSelectedProps();
+            const ref = useRef<HTMLInputElement>(null);
+
+            useEffect(() => {
+              if (ref.current) {
+                ref.current.indeterminate = indeterminate || false;
+              }
+            }, [indeterminate]);
+
+            return (
+              <div>
+                <input type="checkbox" ref={ref} {...restProps} />
+              </div>
+            );
+          },
+          Cell: ({ row }: { row: any }) => {
+            const { indeterminate, ...restProps } = row.getToggleRowSelectedProps();
+            const ref = useRef<HTMLInputElement>(null);
+
+            useEffect(() => {
+              if (ref.current) {
+                ref.current.indeterminate = indeterminate || false;
+              }
+            }, [indeterminate]);
+
+            return (
+              <div>
+                <input type="checkbox" ref={ref} {...restProps} />
+              </div>
+            );
+          },
+        },
+        ...columns,
+      ]);
+    }
   );
 
   const {
@@ -62,9 +107,21 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
     pageOptions,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = tableInstance;
 
   const { globalFilter, pageIndex, pageSize } = state;
+
+  const handleEdit = (row: T) => {
+    setSelectedRow(row);
+    console.log('row', row);
+    handleOpenModal("normal", "edit");
+  };
+
+  const handleCreate = (type: string) => {
+    setSelectedRow({});
+    handleOpenModal(type, "create");
+  };
 
   return (
     <section className="data-table-common rounded-sm border border-stroke bg-white py-4 shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -72,12 +129,14 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
         <div className="flex items-center w-[600px] space-x-4">
           <input
             type="text"
-            value={globalFilter || ''}
+            value={globalFilter || ""}
             onChange={(e) => setGlobalFilter(e.target.value || undefined)}
             className="w-[300px] rounded-md border border-stroke bg-transparent px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary"
             placeholder="请输入关键词..."
           />
-          <ModalOne title={title} subTitle={subTitle} fields={modalFields} />
+          <button onClick={() => handleCreate("normal")} className="rounded-md bg-primary px-9 py-3 font-medium text-white">
+            新增
+          </button>
         </div>
 
         <div className="flex items-center font-medium space-x-2">
@@ -86,8 +145,8 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
             onChange={(e) => setPageSize(Number(e.target.value))}
             className="bg-transparent pl-2"
           >
-            {[5, 10, 20, 50].map((page) => (
-              <option key={page} value={page}>
+            {[5, 10, 20, 50].map((page,key) => (
+              <option key={`page-${key}`} value={page}>
                 {page}
               </option>
             ))}
@@ -105,69 +164,73 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
             <tr
               className="border-t border-stroke dark:border-strokedark"
               {...headerGroup.getHeaderGroupProps()}
-              key={key}
+              key={`group-${key}`}
             >
               {headerGroup.headers.map((column, key) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={key}
+                  key={`column-${key}`}
                 >
                   <div className="flex items-center">
                     <span> {column.render("Header")}</span>
-
-                    <div className="ml-2 inline-flex flex-col space-y-[2px]">
-                      <span className="inline-block">
-                        <svg
-                          className="fill-current"
-                          width="10"
-                          height="5"
-                          viewBox="0 0 10 5"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M5 0L0 5H10L5 0Z" fill="" />
-                        </svg>
-                      </span>
-                      <span className="inline-block">
-                        <svg
-                          className="fill-current"
-                          width="10"
-                          height="5"
-                          viewBox="0 0 10 5"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5 5L10 0L-4.37114e-07 8.74228e-07L5 5Z"
-                            fill=""
-                          />
-                        </svg>
-                      </span>
-                    </div>
+                    {key !== 0 && (
+                      <div className="ml-2 inline-flex flex-col space-y-[2px]">
+                        <span className="inline-block">
+                          <svg className="fill-current" width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 0L0 5H10L5 0Z" fill="" />
+                          </svg>
+                        </span>
+                        <span className="inline-block">
+                          <svg className="fill-current" width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 5L10 0L-4.37114e-07 8.74228e-07L5 5Z" fill="" />
+                          </svg>
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {column.canFilter ? column.render("Filter") : null}
                 </th>
               ))}
+              <th key="action-99999">
+                <div className="flex items-center">
+                  <span className="mx-auto">操作</span>
+                </div>
+              </th>
             </tr>
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row, key) => {
+          {page.map((row: any, key) => {
             prepareRow(row);
             return (
               <tr
                 className="border-t border-stroke dark:border-strokedark"
                 {...row.getRowProps()}
-                key={key}
+                key={`rowCell-${key}`}
               >
-                {row.cells.map((cell, key) => {
+                {row.cells.map((cell: any, key: any) => {
                   return (
-                    <td {...cell.getCellProps()} key={key}>
+                    <td {...cell.getCellProps()} key={`rowCell-item-${key}`}>
                       {cell.render("Cell")}
                     </td>
                   );
                 })}
+                <td key={`action-${key}`}>
+                  <div className="flex items-center">
+                    <div className="mx-auto space-x-1">
+                      <button className="hover:text-meta-5" onClick={() => handleEdit(row.original)}>
+                        编辑
+                      </button>
+                      <button className="hover:text-info" onClick={() => handleDetail(row.original)}>
+                        详情
+                      </button>
+                      <button className="hover:text-danger" onClick={() => handleDelete(row.original)}>
+                        删除
+                      </button>
+                    </div>
+                  </div>
+                </td>
               </tr>
             );
           })}
@@ -198,7 +261,7 @@ const DataTableOne = <T extends object>({ columns, data, modalFields,title,subTi
 
           {pageOptions.map((_page, index) => (
             <button
-              key={index}
+              key={`page-${index}`}
               onClick={() => {
                 gotoPage(index);
               }}

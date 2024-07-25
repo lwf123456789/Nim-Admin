@@ -2,10 +2,10 @@
 import { Employee } from "@/types/Employee";
 import { Column } from "react-table";
 import { NickNameIcon, EmailIcon, BioIcon } from "@/components/Icons";
-import React from "react";
+import React, { useState } from "react";
 import DataTableOne from "@/components/DataTables/DataTableOne";
 const DataTables: React.FC = () => {
-  const tableData: Employee[] = [
+  const tableData: any[] = [
     {
       id: "155",
       name: "王伟",
@@ -174,7 +174,7 @@ const DataTables: React.FC = () => {
   ];
 
 
-  const columns: Column<Employee>[] = [
+  const columns: Column<any>[] = [
     {
       Header: "名字",
       accessor: "name",
@@ -248,10 +248,58 @@ const DataTables: React.FC = () => {
       icon: <BioIcon />,
     },
   ];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [modalType, setModalType] = useState<string>("normal");
+  const [selectedRow, setSelectedRow] = useState<any>({});
+  const handleOpenModal = (type: string, mode: "create" | "edit" | "view") => {
+    setModalType(type);
+    setModalMode(mode);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreateUser = async (userData: any) => {
+    console.log('this is create', userData);
+  };
+
+  const handleUpdateUser = async (userData: any) => {
+    console.log('this is update', userData);
+  };
+
+  const handleDeleteUser = async (user: any) => {
+    if (window.confirm('确定要删除这条记录吗？')) {
+      console.log('this is del', user);
+    }
+  };
+
+  const handleDetail = async (user: any) => {
+    console.log('this is detail', user);
+  }
+
+  const handleSubmit = (data: any) => {
+    if (modalMode === "create") {
+      handleCreateUser(data);
+    } else if (modalMode === "edit") {
+      handleUpdateUser(data);
+    }
+  };
   return (
     <>
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10">
-        <DataTableOne columns={columns} data={tableData} modalFields={modalFields} title="新增用户" subTitle="填写资产信息" />
+        <DataTableOne
+          handleDetail={handleDetail}//详情操作
+          selectedRow={selectedRow} // 传递 selectedRow 状态
+          setSelectedRow={setSelectedRow} // 传递 setSelectedRow 函数
+          columns={columns}//列配置
+          data={tableData}//表格数据
+          handleOpenModal={handleOpenModal} // 传递打开模态框的方法
+          handleDelete={handleDeleteUser}//删除操作
+        />
       </div>
     </>
   );

@@ -1,11 +1,8 @@
 export type Employee = {
     id: string;
-    name: string;
-    position: string;
-    duration: string;
-    birthDate: string;
-    email: string;
-    phone: string;
-    address: string;
+    nickName: string;
+    phoneNumber: string;
+    userName: string;
+    bio: string;
     status: string;
 }
