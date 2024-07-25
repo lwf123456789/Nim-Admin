@@ -5,7 +5,7 @@
 !['Nim Admin'](https://mp-ddb62c52-69ae-440c-aec1-c94f84ca2d2e.cdn.bspapp.com/gitee/logImg.png)
 Nim-Admin 是一个基于 Next.js+Tailwind css组件库模版。该项目利用了多种流行的前端技术和库，以确保高性能、可维护性和用户友好性。
 
-🌟🌟🌟项目预览入口:[http://119.91.217.130/]
+🌟🌟🌟项目预览入口:[http://119.91.217.130:8888]
 
 ### 技术栈与核心框架
 - **Next.js (14.1.0)**: 一款基于 React 的服务端渲染框架，支持静态网站生成、路由处理和 API 集成。
