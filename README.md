@@ -56,7 +56,7 @@ Nim-Admin 项目通过以上技术栈和库的结合，提供了一个高效、�
 svg页面网站:[https://iconscout.com/illustrations/login]
 
 动态配置路由:
-![alt text](/public/images/code1.png)
+![alt text](code1.png)
 
 ## 运行项目：
 ```bash
