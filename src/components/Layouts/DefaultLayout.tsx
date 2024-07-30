@@ -9,31 +9,30 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true); // 初始为展开状态
   return (
     <>
-      {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
-        {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} menuData={menuData} />
-        {/* <!-- ===== Sidebar End ===== --> */}
+        {/* 侧边栏 */}
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} menuData={menuData} sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
+        {/* 侧边栏 end */}
 
-        {/* <!-- ===== Content Area Start ===== --> */}
+        {/* 主体区域 */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          {/* <!-- ===== Header End ===== --> */}
+          {/* 头部 */}
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
+          {/* 头部end */}
 
-          {/* <!-- ===== Main Content Start ===== --> */}
+          {/* 内容 */}
           <main>
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
               {children}
             </div>
           </main>
-          {/* <!-- ===== Main Content End ===== --> */}
+          {/* 内容end */}
         </div>
-        {/* <!-- ===== Content Area End ===== --> */}
+        {/* <!-- 主体区域end */}
       </div>
-      {/* <!-- ===== Page Wrapper End ===== --> */}
     </>
   );
 }

@@ -79,6 +79,7 @@ const menuData: MenuItem[] = [
       { title: "注册", path: "/pages/signup" },
       { title: "验证码", path: "/pages/verify-login" },
       { title: "倒计时", path: "/pages/coming-soon" },
+      { title: "聊天窗口", path: "/pages/messages" },
       { title: "文件管理", path: "/pages/file-manager" },
       { title: "SASS套餐", path: "/pages/pricing-tables" },
       { title: "成功", path: "/pages/mail-success" },
