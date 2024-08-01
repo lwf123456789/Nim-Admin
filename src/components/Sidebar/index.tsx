@@ -122,11 +122,18 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen, menuData
                   </Link>
                   {item.subMenu && (
                     <div className={`ml-10 space-y-1 ${!isExpanded ? "hidden" : ""}`}>
-                      {item.subMenu.map((subItem, subIndex) => (
-                        <Link key={subIndex} href={subItem.path} className="group flex items-center pl-3 py-1 pr-2 text-sm font-medium rounded-md text-gray-300 hover:bg-gray-700 hover:text-white">
-                          <span>{subItem.title}</span>
-                        </Link>
-                      ))}
+                      {item.subMenu.map((subItem, subIndex) => {
+                        const isSubItemActive = pathname === subItem.path;
+                        return (
+                          <Link
+                            key={subIndex}
+                            href={subItem.path}
+                            className={`group flex items-center pl-3 py-1 pr-2 text-sm font-medium rounded-md ${isSubItemActive ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                          >
+                            <span>{subItem.title}</span>
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </>

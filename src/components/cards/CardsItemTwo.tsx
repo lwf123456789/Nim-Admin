@@ -2,60 +2,37 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface Team {
-  image: string;
+interface CardItemPropTwo {
+  imageSrc: string;
   name: string;
   position: string;
 }
 
-const teamItems: Team[] = [
-  {
-    image: "https://cdni.iconscout.com/illustration/premium/thumb/beautiful-woman-5373581-4498302.png?f=webp",
-    name: "果果",
-    position: "后端开发专家",
-  },
-  {
-    image: "https://cdni.iconscout.com/illustration/premium/thumb/happy-boy-5373587-4498308.png?f=webp",
-    name: "小林",
-    position: "全栈开发工程师",
-  },
-  {
-    image: "https://cdni.iconscout.com/illustration/premium/thumb/young-boy-with-cap-5373574-4498295.png?f=webp",
-    name: "小莉",
-    position: "UI/UX设计师",
-  },
-  {
-    image: "https://cdni.iconscout.com/illustration/premium/thumb/boy-5373592-4498313.png?f=webp",
-    name: "JR",
-    position: "数据库管理员",
-  },
-];
-
-
-const TeamTwo: React.FC = () => {
+const TeamTwo: React.FC<CardItemPropTwo> = ({
+  imageSrc,
+  name,
+  position
+}) => {
   return (
     <div className="mx-auto w-full max-w-[1170px]">
-      <div className="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-4">
-        {teamItems.map((item, index) => (
           <div
-            key={index}
-            className="group rounded-[10px] border border-stroke px-4 pb-10 pt-12 dark:border-strokedark"
+            className="group rounded-[10px] shadow-default border border-stroke px-4 pb-10 pt-12 dark:border-strokedark"
           >
             <div className="relative z-1 mx-auto h-30 w-full max-w-30 rounded-full">
               <Image
                 width={120}
                 height={120}
                 className="rounded-full"
-                src={item.image}
+                src={imageSrc}
                 alt="team"
               />
             </div>
 
             <div className="my-5 text-center">
               <h4 className="mb-0.5 text-lg font-bold text-black dark:text-white">
-                {item.name}
+                {name}
               </h4>
-              <p className="text-xs font-medium">{item.position}</p>
+              <p className="text-xs font-medium">{position}</p>
             </div>
 
             <div className="flex items-center justify-center gap-5.5">
@@ -72,9 +49,7 @@ const TeamTwo: React.FC = () => {
               </Link>
             </div>
           </div>
-        ))}
       </div>
-    </div>
   );
 };
 

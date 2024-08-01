@@ -2,7 +2,7 @@
 import React from "react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CardsItemOne from "@/components/cards/CardsItemOne";
-import TeamTwo from "@/components/Teams/TeamTwo";
+import CardsItemTwo from "@/components/cards/CardsItemTwo";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CodeTab from "@/components/CodeTab";
 
@@ -34,6 +34,29 @@ const cardsItemOneData = [
     cardTitle: "前端开发的最佳实践",
     cardContent:
       "遵循前端开发的最佳实践，我们能确保代码的高性能和可读性，从而为用户提供更好的使用体验。",
+  },
+];
+
+const cardsItemTwoData = [
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/beautiful-woman-5373581-4498302.png?f=webp",
+    name: "果果",
+    position: "后端开发专家",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/happy-boy-5373587-4498308.png?f=webp",
+    name: "小林",
+    position: "全栈开发工程师",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/young-boy-with-cap-5373574-4498295.png?f=webp",
+    name: "小莉",
+    position: "UI/UX设计师",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/boy-5373592-4498313.png?f=webp",
+    name: "JR",
+    position: "数据库管理员",
   },
 ];
 
@@ -93,30 +116,77 @@ const Cards: React.FC = () => {
 export default Cards;
 `;
 
+  const codeStringTwo = `
+import React, { useState } from "react";
+import CardsItemTwo from "@/components/cards/CardsItemTwo";
+const cardsItemTwoData = [
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/beautiful-woman-5373581-4498302.png?f=webp",
+    name: "果果",
+    position: "后端开发专家",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/happy-boy-5373587-4498308.png?f=webp",
+    name: "小林",
+    position: "全栈开发工程师",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/young-boy-with-cap-5373574-4498295.png?f=webp",
+    name: "小莉",
+    position: "UI/UX设计师",
+  },
+  {
+    imageSrc: "https://cdni.iconscout.com/illustration/premium/thumb/boy-5373592-4498313.png?f=webp",
+    name: "JR",
+    position: "数据库管理员", 
+  },
+];
+
+const Cards: React.FC = () => {
+  return (
+  <div className="flex flex-col gap-7.5 mt-8">
+        <div className="rounded-sm bg-white dark:bg-boxdark">
+        <div className="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-4">
+          {cardsItemTwoData.map((card2, key2) => (
+            <CardsItemTwo key={key2} imageSrc={card2.imageSrc} name={card2.name} position={card2.position} />
+          ))}
+          </div>
+        </div>
+      </div>
+  );
+};
+
+export default Cards;
+`;
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="卡片" />
       <CodeTab codeString={codeStringOne}>
-      <div className="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-3">
-        {cardsItemOneData.map((card, key) => (
-          <CardsItemOne
-            key={key}
-            imageSrc={card.imageSrc}
-            name={card.name}
-            role={card.role}
-            cardImageSrc={card.cardImageSrc}
-            cardTitle={card.cardTitle}
-            cardContent={card.cardContent}
-          />
-        ))}
-      </div>
-      <div className="flex flex-col gap-7.5 mt-8">
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="p-4 sm:p-6 xl:p-9 2xl:p-15">
-            <TeamTwo />
+        <div className="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-3">
+          {cardsItemOneData.map((card, key) => (
+            <CardsItemOne
+              key={key}
+              imageSrc={card.imageSrc}
+              name={card.name}
+              role={card.role}
+              cardImageSrc={card.cardImageSrc}
+              cardTitle={card.cardTitle}
+              cardContent={card.cardContent}
+            />
+          ))}
+        </div>
+      </CodeTab>
+      <CodeTab codeString={codeStringTwo}>
+        <div className="flex flex-col gap-7.5 mt-8">
+          <div className="rounded-sm bg-white dark:bg-boxdark">
+            <div className="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-4">
+              {cardsItemTwoData.map((card2, key2) => (
+                <CardsItemTwo key={key2} imageSrc={card2.imageSrc} name={card2.name} position={card2.position} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
       </CodeTab>
     </DefaultLayout>
   );
